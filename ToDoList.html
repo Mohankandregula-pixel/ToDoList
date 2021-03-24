@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <script src="https://unpkg.com/react@16/umd/react.development.js" crossorigin></script>
+    <script src="https://unpkg.com/react-dom@16/umd/react-dom.development.js" crossorigin></script>
+    <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
+    <title>Counter</title>
+        <style>
+    .center {
+            margin: auto;
+            width: 50%;
+            border: 3px solid rgb(2, 2, 2);
+            padding: 10px;
+
+    }
+    .li {
+      margin: 10px;
+    }
+
+    </style>
+  </head>
+  <body>
+    <div id="app" />
+    <script type="text/babel">
+
+      class Counter extends React.Component {
+        constructor(props) {
+          super(props);
+          this.state = {
+            tasks:[],
+            input: "",
+            count:0
+          };
+        }
+
+        render() {
+          return (
+            <div class="center">
+              <h1>To Do list</h1>
+              <ul>
+                  {this.state.tasks.map((task, i) =>
+                  <li class="li" key={i}>
+                      {task} &nbsp;
+                      <button onClick={(event)=>{this.deleteTask(event,i)}}>Clear</button>
+                  </li>
+                  )} <br/>
+              </ul>
+              <h3>Remaining tasks:{this.state.count}</h3>
+              <input onKeyPress={this.inputKeyPress} onChange={this.handleChange} value={this.state.input} />
+              <button onClick={this.addtask}>Add task</button>
+
+            </div>
+          );
+        }
+
+        inputKeyPress = (event) => {
+          if (event.key === "Enter") {
+            this.setState(state => ({
+            tasks: [...state.tasks, state.input],
+            input:"",
+            count: this.state.count + 1
+          }))        
+                        }
+                        }
+        handleChange = (event) => {
+                    this.setState({
+            input: event.target.value
+            });
+        }
+
+        deleteTask=(event,i)=>{
+        var ditem=[...this.state.tasks]
+        ditem.splice(i,1)
+        this.setState(state=>({
+          tasks:ditem,
+          count:state.count-1
+        }));
+
+      }
+
+        addtask = () => {
+          this.setState(state => ({
+            tasks: [...state.tasks, state.input],
+            input:"",
+            count: this.state.count + 1
+          }))
+        }
+      }
+
+      class App extends React.Component {
+
+        render() {
+          return (
+            <div>
+              <Counter />
+            </div>
+          );
+        }
+      }
+
+      ReactDOM.render(<App />, document.querySelector("#app"));
+
+    </script>
+  </body>
+</html>
