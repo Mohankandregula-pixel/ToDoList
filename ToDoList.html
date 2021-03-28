@@ -41,17 +41,39 @@
                   {this.state.tasks.map((task, i) =>
                   <li class="li" key={i}>
                       {task} &nbsp;
-                      <button onClick={(event)=>{this.deleteTask(event,i)}}>Clear</button>
+                      <button onClick={(event)=>{this.deleteTask(event,i)}}>Clear</button> &nbsp;
+                      <button onClick={(event)=>{this.edit(event,i)}}> Edit </button>
+
                   </li>
                   )} <br/>
               </ul>
               <h3>Remaining tasks:{this.state.count}</h3>
               <input onKeyPress={this.inputKeyPress} onChange={this.handleChange} value={this.state.input} />
               <button onClick={this.addtask}>Add task</button>
+              <button onClick={this.Update}>Update</button>
+
 
             </div>
           );
         }
+
+        Update = (event, i) => {
+          var n=[...this.state.tasks]
+          n[this.state.index]=this.state.input
+          this.setState({
+            tasks:n,
+            input:""
+          })
+
+        }
+        edit=(event,i)=>{
+        this.setState({
+          input:this.state.tasks[i],
+          index:i
+        })
+
+      }
+
 
         inputKeyPress = (event) => {
           if (event.key === "Enter") {
