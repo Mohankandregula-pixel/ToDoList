@@ -20,7 +20,8 @@
           this.state = {
             tasks:[],
             input: "",
-            count:0
+            count:0,
+            restore:[]
           };
         }
 
@@ -46,11 +47,39 @@
               <input class="box" onKeyPress={this.inputKeyPress} onChange={this.handleChange} value={this.state.input} />
               <button class="button" onClick={this.addtask}>Add task</button>
               <button class="button" onClick={this.Update}>Update</button>
+              <button class="button" onClick={this.getdata} > Load Data</button> 
 
+              <h1>Deleted Tasks</h1>
+              
+              <ul>
+                  {this.state.restore.map((task, i) =>
+                  <li class="li" key={i}>
+                      {task} &nbsp;
+                      <button class="button" onClick={(event)=>{this.Restore(event,i)}}>Restore</button> &nbsp;
+                      <button class="button" onClick={(event)=>{this.DP(event,i)}}>Delete Permanently</button>
+
+                  </li>
+                  
+                  )} <br/>
+              </ul>
+
+              
 
             </div>
+            
+            
           );
         }
+
+      getdata = () => {
+			fetch('https://raw.githubusercontent.com/SamSwaroop/ToDo/main/sample.json') 
+			.then(resp => resp.json())
+			.then(data => {
+				console.log(data);
+				this.setState({tasks:data});
+				this.cached['tasks'] = {test:"testing"}; 
+			});
+		}
 
         Update = (event, i) => {
           var n=[...this.state.tasks]
@@ -85,13 +114,17 @@
             });
         }
 
-        deleteTask=(event,i)=>{
-        var ditem=[...this.state.tasks]
-        ditem.splice(i,1)
+      deleteTask=(event,i)=>{
+        var n=[...this.state.tasks]
+        this.state.restore=[...this.state.restore,n.splice(i,1)]
+        
         this.setState(state=>({
-          tasks:ditem,
-          count:state.count-1
+          tasks:n,
+          
+          
+          
         }));
+        console.log(this.state.restore)
 
       }
 
@@ -102,7 +135,28 @@
             count: this.state.count + 1
           }))
         }
+
+        DP =(event,i)=>{
+        var s=[...this.state.restore]
+        s.splice(i,1)
+        this.setState({
+          restore:s
+        })
       }
+
+
+      Restore=(event,i)=>{
+        var r=[...this.state.restore]
+        this.state.tasks=[...this.state.tasks,r.splice(i,1)]
+        this.state.restore.splice(i,1)
+        this.setState({
+          tasks:this.state.tasks
+        })
+
+      }
+      }
+
+        
 
       class App extends React.Component {
 
@@ -120,3 +174,9 @@
     </script>
   </body>
 </html>
+
+
+
+
+
+
